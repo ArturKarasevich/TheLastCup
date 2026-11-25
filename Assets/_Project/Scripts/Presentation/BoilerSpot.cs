@@ -1,0 +1,132 @@
+using TheLastCup.Core;
+using UnityEngine;
+
+namespace TheLastCup.Presentation
+{
+    [RequireComponent(typeof(Collider))]
+    public class BoilerSpot : MonoBehaviour
+    {
+        [SerializeField] private Transform _snapPoint;
+        [SerializeField] private OutlineEffect _outline;
+
+        private bool _isActive;
+        private bool _hasTeapot;
+        private int _teapotColliderCount;
+        private bool _isTeaReady;
+
+        private void OnEnable()
+        {
+            GameEvents.OnTeapotGrabbed += OnTeapotGrabbed;
+            GameEvents.OnTeapotDropped += OnTeapotDropped;
+            GameEvents.OnTeaBrewed += OnTeaBrewed;
+            GameEvents.OnTeapotBroken += OnReset;
+            GameEvents.OnResetTeaCycle += OnReset;
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnTeapotGrabbed -= OnTeapotGrabbed;
+            GameEvents.OnTeapotDropped -= OnTeapotDropped;
+            GameEvents.OnTeaBrewed -= OnTeaBrewed;
+            GameEvents.OnTeapotBroken -= OnReset;
+            GameEvents.OnResetTeaCycle -= OnReset;
+        }
+
+        private void Awake()
+        {
+            GetComponent<Collider>().isTrigger = true;
+
+            if (!_snapPoint)
+                _snapPoint = transform;
+
+            if (!_outline)
+                _outline = GetComponent<OutlineEffect>();
+        }
+
+        private void OnTeapotGrabbed(Transform teapot)
+        {
+            if (_isTeaReady || !teapot) return;
+
+            Teapot station;
+
+            if (teapot.TryGetComponent<Teapot>(out station) && station.State == TeapotState.CarriedForBoiler)
+            {
+                _isActive = true;
+                if (_outline)
+                    _outline.SetPulse(true);
+            }
+        }
+
+        private void OnTeapotDropped()
+        {
+            if (!_isActive) return;
+
+            if (_outline)
+                _outline.SetPulse(false);
+
+            if (_hasTeapot)
+            {
+                _isActive = false;
+                _hasTeapot = false;
+                _teapotColliderCount = 0;
+
+                if (_outline)
+                    _outline.SetLit(false);
+
+                GameEvents.PlaceTeapotUnderBoiler(_snapPoint);
+            }
+            else
+            {
+                _isActive = false;
+            }
+        }
+
+        private void OnTeaBrewed()
+        {
+            _isTeaReady = true;
+            _isActive = false;
+            _hasTeapot = false;
+            _teapotColliderCount = 0;
+
+            if (_outline)
+            {
+                _outline.SetPulse(false);
+                _outline.SetLit(false);
+            }
+        }
+
+        private void OnReset()
+        {
+            _isTeaReady = false;
+            _isActive = false;
+            _hasTeapot = false;
+            _teapotColliderCount = 0;
+
+            if (_outline)
+            {
+                _outline.SetPulse(false);
+                _outline.SetLit(false);
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.GetComponentInParent<Teapot>() == null) return;
+
+            _teapotColliderCount++;
+            _hasTeapot = true;
+            if (_isActive && _outline)
+                _outline.SetLit(true);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.GetComponentInParent<Teapot>() == null) return;
+
+            _teapotColliderCount = Mathf.Max(0, _teapotColliderCount - 1);
+            _hasTeapot = _teapotColliderCount > 0;
+            if (!_hasTeapot && _outline)
+                _outline.SetLit(false);
+        }
+    }
+}
