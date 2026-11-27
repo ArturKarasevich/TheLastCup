@@ -1,0 +1,351 @@
+fileFormatVersion: 2
+guid: b99148a03f0042d46aa8aa1c5c769d25
+ModelImporter:
+  serializedVersion: 24600
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Berry_Burgundy
+    second: {fileID: 2100000, guid: ba55e6eac6213ac4d80ef3f587ccff37, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Berry_Garnet
+    second: {fileID: 2100000, guid: 7746194866a7bcf42ae0dcc5248e3dfe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Berry_Ruby
+    second: {fileID: 2100000, guid: b75d1ffaae7ad0f479c2708f2f689ed3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Book
+    second: {fileID: 2100000, guid: d0c5de6eb31878243b10af34d235dd9d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chainik_Handle
+    second: {fileID: 2100000, guid: 0327b177c9e1d694f85ed7927adb5191, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chainik_Water_Mat
+    second: {fileID: 2100000, guid: e4fe69f62e0dbec4a87e2c4493c2bee3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chair
+    second: {fileID: 2100000, guid: ba9654950dfc8764e92c4a19353bcf95, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chamomile_Calyx
+    second: {fileID: 2100000, guid: e07e7e5b65d215a4b94c4280495cd720, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chamomile_Center
+    second: {fileID: 2100000, guid: 2222304f9c058db46ba4165730df2a33, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chamomile_Core
+    second: {fileID: 2100000, guid: 2a89939447d2e5743b2cb5e889e1b182, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Chamomile_Petal
+    second: {fileID: 2100000, guid: c070368d5b958314d9868051259791b1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cup
+    second: {fileID: 2100000, guid: 1dfda094302930944bf11793aae7d83f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkWood
+    second: {fileID: 2100000, guid: 43bc0245a75c6824bba3ebb9bd973793, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fireweed_Petal
+    second: {fileID: 2100000, guid: a8b2e8f314760a9409e04114d1ef5563, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassJar.001
+    second: {fileID: 2100000, guid: 4e12f5503e8cd5c47b28b19c37f846a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GlassJar.002
+    second: {fileID: 2100000, guid: ada34cb056078a142808e6a898ee4577, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HeavyDoor
+    second: {fileID: 2100000, guid: 31ba32f18b4ec2749a3bf7d2fe261cbd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: HeavyDoor_PROHOD
+    second: {fileID: 2100000, guid: c3e10b8587fde7e4e866ad41a5085a8f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lampa
+    second: {fileID: 2100000, guid: c7b0eb9a0cfa39a4591869f5e42ef23d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lampa_Pobitaya
+    second: {fileID: 2100000, guid: 0706739740312b342a54c930d86a7bf4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LightDoor
+    second: {fileID: 2100000, guid: c0cb3094db992e04d85a620da43f90f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Linden_Bract
+    second: {fileID: 2100000, guid: 5c4101b82e9869444a9f22cb30297611, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Linden_HoneyCore
+    second: {fileID: 2100000, guid: ed1c56c5cbfb19d40a6b91d2b2c07f56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Linden_Petal
+    second: {fileID: 2100000, guid: 94012f1f8e1abc247af904dc1e4b91d1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Linden_Stem
+    second: {fileID: 2100000, guid: b4c396a98ca30484b8a5448f9c082a2e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MagicSphere.001
+    second: {fileID: 2100000, guid: 733f8ac6cc1ba1643bde849ceebda936, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: MasterTable
+    second: {fileID: 2100000, guid: d8fd1434db6163e4fbf2be16626b5705, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Oregano_Blossom
+    second: {fileID: 2100000, guid: 711ca9a66cb9fb548bfe2da997803f2f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Oregano_Bract
+    second: {fileID: 2100000, guid: 07883cd524f43144ba2385a652bf124b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Oregano_Leaf
+    second: {fileID: 2100000, guid: 4827029c2bac9d6448fe772ad25489fb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Peppermint_Leaf
+    second: {fileID: 2100000, guid: fbc6ed3b015b82146aabb46b84e9f885, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StJohnsWort_Capsule
+    second: {fileID: 2100000, guid: a3e12fc90923b484d91ef122160ed200, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StJohnsWort_Leaf
+    second: {fileID: 2100000, guid: 09752982ccb56ed4784b754819f5d3bc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StJohnsWort_Petal
+    second: {fileID: 2100000, guid: 5736396ccf23dc348a5786c3d9f73f82, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StJohnsWort_Stem
+    second: {fileID: 2100000, guid: 7733365d6dd2fed4687cd2c7ed992d05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StandForTitan
+    second: {fileID: 2100000, guid: 5e1d60bcabc741d448bc0f8cadb559f9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: StolDlyaTrav
+    second: {fileID: 2100000, guid: 8c83b613eb21c1349a1cefd94a18b5b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Table_Big
+    second: {fileID: 2100000, guid: 1774217b213978248ae090edcb8d3074, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Table_Small
+    second: {fileID: 2100000, guid: af129bb92d2a9274e935a55b0bfb02c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tea_Leaf
+    second: {fileID: 2100000, guid: 4a309d33c7ac4d04a808ecc3e2a67bed, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Thyme_Flower
+    second: {fileID: 2100000, guid: 2e22b773e78125e48aaf1e939e1f23cb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Thyme_Leaf
+    second: {fileID: 2100000, guid: 0b6def2f71c539049bb957f1f1e9e70d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Thyme_Stem
+    second: {fileID: 2100000, guid: 14eaf4625a5792045a9b538d36e6ef12, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Titan
+    second: {fileID: 2100000, guid: 42c1ad01a9ffccc408a87058e3c62468, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Vagon
+    second: {fileID: 2100000, guid: 84366abc62507ab40bede0820a33965d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wormwood_Leaf
+    second: {fileID: 2100000, guid: 2d7f069f172ed9343937adea5eff65dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wormwood_Stem
+    second: {fileID: 2100000, guid: dd3fc34822008a845a834a5cdea56bb4, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    preBakeConvexCollisionMesh: 0
+    preBakeTriangleCollisionMesh: 0
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    importUVs: -1
+    importVertexColors: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+    calculateBlendshapeNormalsDeltaFromImportedNormals: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
