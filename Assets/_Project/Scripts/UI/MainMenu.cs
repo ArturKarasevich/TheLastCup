@@ -36,6 +36,12 @@ namespace TheLastCup.UI
 
         private void Awake()
         {
+            if (GameEvents.SkipMenuNextTime)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             GameSettings.LoadSettings();
             _camera = FindFirstObjectByType<CameraController>();
             SetupButtonsAndSliders();
@@ -44,12 +50,6 @@ namespace TheLastCup.UI
 
         private void Start()
         {
-            if (GameEvents.SkipMenuNextTime)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
             if (_camera != null)
                 _camera.MoveToMenuWindow();
         }

@@ -1,5 +1,6 @@
 using TheLastCup.Core;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace TheLastCup.Presentation
@@ -13,6 +14,7 @@ namespace TheLastCup.Presentation
         private bool _isFocused;
         private bool _isLocked;
         private bool _wasEntered;
+        private bool _isSubFocusOpen;
 
         public bool IsFocused { get { return _isFocused; } }
 
@@ -83,8 +85,16 @@ namespace TheLastCup.Presentation
             OnSubFocusChanged(isJournalOpen);
         }
 
+        private void Update()
+        {
+            if (_isFocused && !_isSubFocusOpen && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+                ExitStation();
+        }
+
         private void OnSubFocusChanged(bool isSubFocusOpen)
         {
+            _isSubFocusOpen = isSubFocusOpen;
+
             if (!_isFocused || !_backButton)
                 return;
 

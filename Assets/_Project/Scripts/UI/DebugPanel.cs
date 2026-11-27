@@ -12,6 +12,7 @@ namespace TheLastCup.UI
         [SerializeField] private bool _showInBuild = true;
 
         private bool _isOpen;
+        private bool _showFps;
         private Rect _windowRect = new Rect(20, 20, 320, 460);
 
         private void Awake()
@@ -24,16 +25,30 @@ namespace TheLastCup.UI
         {
             if (!_showInBuild && !Application.isEditor) return;
 
-            if (Keyboard.current != null && Keyboard.current.f1Key.wasPressedThisFrame)
+            if (Keyboard.current != null)
             {
-                _isOpen = !_isOpen;
-                GameEvents.SetUIMode(_isOpen);
+                if (Keyboard.current.f1Key.wasPressedThisFrame)
+                {
+                    _isOpen = !_isOpen;
+                    GameEvents.SetUIMode(_isOpen);
+                }
+
+                if (Keyboard.current.f2Key.wasPressedThisFrame)
+                    _showFps = !_showFps;
             }
         }
 
         private void OnGUI()
         {
-            if (!_isOpen || (!_showInBuild && !Application.isEditor)) return;
+            if (!_showInBuild && !Application.isEditor) return;
+
+            if (_showFps)
+            {
+                int fps = Time.unscaledDeltaTime > 0f ? Mathf.RoundToInt(1f / Time.unscaledDeltaTime) : 0;
+                GUI.Box(new Rect(Screen.width - 110, 12, 98, 26), $"{fps} FPS");
+            }
+
+            if (!_isOpen) return;
 
             _windowRect = GUI.Window(9001, _windowRect, DrawDebugWindow, "QA Тест-панель (F1 — закрыть)");
         }

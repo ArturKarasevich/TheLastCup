@@ -108,7 +108,7 @@ namespace TheLastCup.Presentation
         {
             GameEvents.SkipMenuNextTime = false;
 
-            if (FindFirstObjectByType<UI.MainMenu>() != null)
+            if (!_skipMenuOnce && FindFirstObjectByType<UI.MainMenu>() != null)
             {
                 _isGameStarted = false;
                 _isOpen = false;

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using TheLastCup.Core;
 using TheLastCup.Data;
 using TheLastCup.Presentation;
@@ -27,6 +26,7 @@ namespace TheLastCup.UI
         [SerializeField] private Transform _firstPage;
         [SerializeField] private Transform _pageTemplate;
         [SerializeField] private TalkChoiceButton _magnifierButton;
+        [SerializeField] private AudioSource _pageTurnSource;
 
         [SerializeField] private float PageThickness = 0.002f;
         [SerializeField] private float FlipTime = 0.35f;
@@ -79,6 +79,9 @@ namespace TheLastCup.UI
             GameEvents.OnHerbSecretUnlocked += OnSecretUnlocked;
             GameEvents.OnItemUnlocked += OnItemUnlocked;
             GameEvents.OnCameraLockChanged += OnCameraLockChanged;
+            GameEvents.OnCameraReturnAndLookRequested += OnForcedCameraMove;
+            GameEvents.OnSnapCameraRequested += OnForcedCameraMove;
+            GameEvents.OnSnapCameraBackRequested += OnCameraSnapBack;
             GameEvents.OnFirstTeaStationEntered += OnFirstTeaStationEntered;
         }
 
@@ -89,6 +92,9 @@ namespace TheLastCup.UI
             GameEvents.OnHerbSecretUnlocked -= OnSecretUnlocked;
             GameEvents.OnItemUnlocked -= OnItemUnlocked;
             GameEvents.OnCameraLockChanged -= OnCameraLockChanged;
+            GameEvents.OnCameraReturnAndLookRequested -= OnForcedCameraMove;
+            GameEvents.OnSnapCameraRequested -= OnForcedCameraMove;
+            GameEvents.OnSnapCameraBackRequested -= OnCameraSnapBack;
             GameEvents.OnFirstTeaStationEntered -= OnFirstTeaStationEntered;
         }
 
@@ -210,6 +216,11 @@ namespace TheLastCup.UI
 
         public void CloseBook()
         {
+            CloseBook(true);
+        }
+
+        private void CloseBook(bool returnCamera)
+        {
             if (!_isOpen) return;
 
             StopPageFlip(true);
@@ -221,10 +232,13 @@ namespace TheLastCup.UI
 
             GameEvents.SendBookFocusChanged(false);
 
-            if (_cameraPoint)
-                GameEvents.RequestCameraFreeLook();
-            else
-                GameEvents.SetUIMode(false);
+            if (returnCamera)
+            {
+                if (_cameraPoint)
+                    GameEvents.RequestCameraFreeLook();
+                else
+                    GameEvents.SetUIMode(false);
+            }
         }
 
         private void OnFirstTeaStationEntered()
@@ -410,6 +424,8 @@ namespace TheLastCup.UI
                 return;
             }
 
+            AudioHelper.Play(_pageTurnSource);
+
             _nextPageIndex = targetIndex;
             _flipCoroutine = StartCoroutine(FlipPageRoutine(_currentHerbIndex, targetIndex, forward));
         }
@@ -507,7 +523,19 @@ namespace TheLastCup.UI
         private void OnCameraLockChanged(bool isLocked)
         {
             if (!isLocked && _isOpen)
-                CloseBook();
+                CloseBook(false);
+        }
+
+        private void OnForcedCameraMove(Transform target)
+        {
+            if (_isOpen)
+                CloseBook(false);
+        }
+
+        private void OnCameraSnapBack()
+        {
+            if (_isOpen)
+                CloseBook(false);
         }
 
         private void OnSecretUnlocked(string herbId)
@@ -603,61 +631,51 @@ namespace TheLastCup.UI
 
         private string GetLeftPageText(HerbInfo herb, int index)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine($"<size=118%><b>{index + 1}. {herb.name}</b></size>");
-            sb.AppendLine($"<color=#5C3A21><size=88%><i>{GetSlotName(herb)}</i></size></color>");
-            sb.AppendLine();
+            string text = "";
+            text += $"<size=118%><b>{index + 1}. {herb.name}</b></size>\n";
+            text += $"<color=#5C3A21><size=88%><i>{GetSlotName(herb)}</i></size></color>\n\n";
 
             string essenceText = !string.IsNullOrEmpty(herb.essence) ? herb.essence : herb.smellHint;
-            AddLabeledLine(sb, "Суть", essenceText);
-            AddLabeledLine(sb, "Вид", herb.lookInfo);
-            AddLabeledLine(sb, "Физика", herb.bodyEffect);
-            AddLabeledLine(sb, "Эмоции", herb.moodEffect);
-            AddLabeledLine(sb, "Вкус", herb.taste);
+            text += FormatLabeledLine("Суть", essenceText);
+            text += FormatLabeledLine("Вид", herb.lookInfo);
+            text += FormatLabeledLine("Физика", herb.bodyEffect);
+            text += FormatLabeledLine("Эмоции", herb.moodEffect);
+            text += FormatLabeledLine("Вкус", herb.taste);
 
-            return sb.ToString();
+            return text;
         }
 
         private string GetRightPageText(HerbInfo herb, int index)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("<size=108%><b>Дополнительная страница</b></size>");
-            sb.AppendLine();
+            string text = "<size=108%><b>Дополнительная страница</b></size>\n\n";
 
             if (_knownSecrets.Contains(herb.id))
             {
                 string author = !string.IsNullOrEmpty(herb.secretAuthor) ? herb.secretAuthor : "Заметка мастера";
-                sb.AppendLine($"<color=#6B3E00><b>{author}:</b></color>");
+                text += $"<color=#6B3E00><b>{author}:</b></color>\n";
 
                 if (!string.IsNullOrEmpty(herb.secretNote))
-                    sb.AppendLine($"<i>«{herb.secretNote}»</i>");
-
-                if (herb.tags != null && herb.tags.Length > 0)
-                {
-                    sb.AppendLine();
-                    sb.AppendLine($"<color=#4A4A4A><size=84%>Теги: {string.Join(", ", herb.tags)}</size></color>");
-                }
+                    text += $"<i>«{herb.secretNote}»</i>\n";
             }
             else
             {
-                sb.AppendLine("<color=#6D645B><i>Строки на этой странице выцвели от времени и дорожной сырости...</i></color>");
-                sb.AppendLine();
-                sb.AppendLine("Откроется при верной заварке для гостя, с которым связана эта трава.");
+                text += "<color=#6D645B><i>Строки на этой странице выцвели от времени и дорожной сырости...</i></color>\n\n";
+                text += "Откроется при верной заварке для гостя, с которым связана эта трава.\n";
 
                 if (CanUseMagnifierOnHerb(herb))
                 {
-                    sb.AppendLine();
-                    sb.AppendLine("<color=#7B5200><b>[Треснутая лупа]</b> Нажмите на кнопку ниже, чтобы проявить запись.</color>");
+                    text += "\n";
+                    text += "<color=#7B5200><b>[Треснутая лупа]</b> Нажмите на кнопку ниже, чтобы проявить запись.</color>\n";
                 }
             }
 
-            return sb.ToString();
+            return text;
         }
 
-        private static void AddLabeledLine(StringBuilder sb, string label, string value)
+        private static string FormatLabeledLine(string label, string value)
         {
-            if (string.IsNullOrEmpty(value)) return;
-            sb.AppendLine($"<b>{label}:</b> {value}");
+            if (string.IsNullOrEmpty(value)) return "";
+            return $"<b>{label}:</b> {value}\n";
         }
 
         private static string GetSlotName(HerbInfo herb)

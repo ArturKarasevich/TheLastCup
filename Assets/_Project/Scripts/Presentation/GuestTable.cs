@@ -23,6 +23,7 @@ namespace TheLastCup.Presentation
             GameEvents.OnTeaChecked += OnTeaChecked;
             GameEvents.OnGuestSatAtTable += OnGuestSatAtTable;
             GameEvents.OnGuestDone += OnGuestDone;
+            GameEvents.OnSnapCameraRequested += OnCameraSnapped;
         }
 
         private void OnDisable()
@@ -30,10 +31,12 @@ namespace TheLastCup.Presentation
             GameEvents.OnTeaChecked -= OnTeaChecked;
             GameEvents.OnGuestSatAtTable -= OnGuestSatAtTable;
             GameEvents.OnGuestDone -= OnGuestDone;
+            GameEvents.OnSnapCameraRequested -= OnCameraSnapped;
         }
 
         private void OnGuestSatAtTable(string spiritId, GameObject modelRoot)
         {
+            if (_isSitting) return;
             if (!string.IsNullOrEmpty(_guestId) && _guestId != spiritId)
                 return;
 
@@ -110,17 +113,7 @@ namespace TheLastCup.Presentation
             _savedResult = null;
             _savedGuest = null;
 
-            if (_outline)
-            {
-                if (_sittingModel)
-                {
-                    RemoveClickProxy(_sittingModel);
-                    _outline.RemoveRenderer(_sittingModel);
-                    _sittingModel = null;
-                }
-                _outline.SetPulse(false);
-                _outline.SetLit(false);
-            }
+            ClearHighlight();
         }
 
         public void OnHoverStart()
@@ -144,19 +137,43 @@ namespace TheLastCup.Presentation
             _waitingForPlayer = false;
             _isSitting = true;
 
+            ClearHighlight();
+
+            GameEvents.RequestFadeMove(_cameraPoint, OnTableFadeComplete);
+        }
+
+        private void OnCameraSnapped(Transform target)
+        {
+            if (target == _cameraPoint)
+            {
+                _waitingForPlayer = false;
+                ClearHighlight();
+            }
+        }
+
+        private void ClearHighlight()
+        {
+            if (_sittingModel)
+            {
+                RemoveClickProxy(_sittingModel);
+                if (_outline)
+                    _outline.RemoveRenderer(_sittingModel);
+
+                OutlineEffect[] modelOutlines = _sittingModel.GetComponentsInChildren<OutlineEffect>(true);
+                for (int i = 0; i < modelOutlines.Length; i++)
+                {
+                    modelOutlines[i].SetPulse(false);
+                    modelOutlines[i].SetLit(false);
+                }
+
+                _sittingModel = null;
+            }
+
             if (_outline)
             {
-                if (_sittingModel)
-                {
-                    RemoveClickProxy(_sittingModel);
-                    _outline.RemoveRenderer(_sittingModel);
-                    _sittingModel = null;
-                }
                 _outline.SetPulse(false);
                 _outline.SetLit(false);
             }
-
-            GameEvents.RequestFadeMove(_cameraPoint, OnTableFadeComplete);
         }
 
         private void OnTableFadeComplete()

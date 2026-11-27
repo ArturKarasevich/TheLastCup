@@ -45,11 +45,9 @@ namespace TheLastCup.Data
         public bool isTwistGuest;
         public string introLines;
         public string[] wantedHerbs;
-        public string[] wantedTags;
         public string[] keyWords;
         public string giveItem;
         public string itemId;
-        public string trapHint;
         public string badTalk;
         public string okTalk;
         public string goodTalk;

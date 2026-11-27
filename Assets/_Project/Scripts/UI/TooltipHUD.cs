@@ -283,9 +283,6 @@ namespace TheLastCup.UI
             if (_book && _book.IsOpen)
                 return "Кликай по страницам травника, чтобы их листать";
 
-            if (_teapot && _teapot.State == TeapotState.Falling)
-                return "Лови чайник! Быстрее нажми на него, чтобы не разбился!";
-
             if (_ballOutline && _ballOutline.IsPulsing)
                 return "Посмотри на стеклянный шар — он акцентирует важные слова гостя";
 

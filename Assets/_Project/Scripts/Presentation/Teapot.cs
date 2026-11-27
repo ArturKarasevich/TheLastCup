@@ -276,8 +276,6 @@ namespace TheLastCup.Presentation
                     else
                     {
                         Shader urpShader = Shader.Find("Universal Render Pipeline/Lit");
-                        if (urpShader == null) urpShader = Shader.Find("Universal Render Pipeline/Simple Lit");
-                        if (urpShader == null) urpShader = Shader.Find("Sprites/Default");
                         if (urpShader != null)
                             mr.material = new Material(urpShader);
                     }
@@ -366,6 +364,8 @@ namespace TheLastCup.Presentation
             }
         }
 
+        private const int LiquidRenderQueue = 2990;
+
         private void UpdateLiquidLook()
         {
             if (!_teaLiquidRenderer) return;
@@ -377,6 +377,7 @@ namespace TheLastCup.Presentation
             }
 
             _teaLiquidRenderer.enabled = true;
+            _teaLiquidRenderer.material.renderQueue = LiquidRenderQueue;
             _teaLiquidRenderer.material.color = GetMixedTeaColor();
         }
 

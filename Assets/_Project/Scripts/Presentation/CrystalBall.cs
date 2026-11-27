@@ -20,6 +20,8 @@ namespace TheLastCup.Presentation
         [SerializeField] private float CloseDistance = 0.095f;
         [SerializeField] private float InspectHeightOffset = 0.005f;
         [SerializeField] private float MoveSpeed = 10f;
+        [SerializeField] private Transform _spinTarget;
+        [SerializeField] private float _idleSpinSpeed = 12f;
 
         public int MaxLineChars = 25;
         public int MaxWords = 3;
@@ -100,6 +102,11 @@ namespace TheLastCup.Presentation
 
         private void Update()
         {
+            if (_spinTarget != null && !_isBroken && _moveCoroutine == null && _shakeCoroutine == null && _idleSpinSpeed != 0f)
+            {
+                _spinTarget.Rotate(Vector3.up, _idleSpinSpeed * Time.deltaTime, Space.World);
+            }
+
             if (!_isOpen || Time.frameCount == _openedOnFrame)
                 return;
 
@@ -267,6 +274,9 @@ namespace TheLastCup.Presentation
         {
             _shouldBreakOnWall = false;
             _hasStartedBreaking = true;
+
+            if (_particles)
+                _particles.StopAndClear();
 
             if (_moveCoroutine != null)
             {
@@ -475,10 +485,13 @@ namespace TheLastCup.Presentation
             _wordsContainer.localPosition = localSphereCenter;
             _wordsContainer.gameObject.SetActive(true);
 
+            const float BaseTextScaleFactor = 0.25f;
+            const float MinTextRadius = 0.00005f;
+
             float scale = Mathf.Max(0.001f, transform.lossyScale.x);
-            float invScale = (1f / (scale * scale)) * ParticleTextScale;
+            float invScale = (BaseTextScaleFactor / scale) * ParticleTextScale;
             float localOffset = SurfaceOffset / scale;
-            float innerR = Mathf.Max(0.005f, (localRadius - localOffset) * 0.54f);
+            float innerR = Mathf.Max(MinTextRadius, (localRadius - localOffset) * 0.54f);
             int totalSlots = Mathf.Min(allKeywords.Length, MaxWords);
 
             for (int slotIdx = 0; slotIdx < totalSlots; slotIdx++)
@@ -529,13 +542,13 @@ namespace TheLastCup.Presentation
             if (string.IsNullOrEmpty(text) || maxCharsPerLine <= 0)
                 return text;
 
-            var result = new System.Text.StringBuilder(text.Length + 8);
+            string result = "";
             string[] paragraphs = text.Replace("\r\n", "\n").Split('\n');
 
             for (int p = 0; p < paragraphs.Length; p++)
             {
                 if (p > 0)
-                    result.Append('\n');
+                    result += "\n";
 
                 string[] words = paragraphs[p].Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
                 int currentLineLen = 0;
@@ -545,23 +558,23 @@ namespace TheLastCup.Presentation
                     string word = words[w];
                     if (currentLineLen == 0)
                     {
-                        result.Append(word);
+                        result += word;
                         currentLineLen = word.Length;
                     }
                     else if (currentLineLen + 1 + word.Length <= maxCharsPerLine)
                     {
-                        result.Append(' ').Append(word);
+                        result += " " + word;
                         currentLineLen += 1 + word.Length;
                     }
                     else
                     {
-                        result.Append('\n').Append(word);
+                        result += "\n" + word;
                         currentLineLen = word.Length;
                     }
                 }
             }
 
-            return result.ToString();
+            return result;
         }
 
         private void FaceWordsToCamera()

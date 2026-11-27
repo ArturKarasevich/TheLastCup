@@ -100,16 +100,6 @@ namespace TheLastCup.Domain
                     return true;
             }
 
-            if (guest.wantedTags != null && slotIndex < guest.wantedTags.Length && herb.tags != null)
-            {
-                string wantedTag = guest.wantedTags[slotIndex];
-                foreach (var herbTag in herb.tags)
-                {
-                    if (string.Equals(herbTag, wantedTag, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                }
-            }
-
             return false;
         }
     }

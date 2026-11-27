@@ -27,12 +27,16 @@ namespace TheLastCup.Presentation
         [SerializeField] private float _snowTime = 4.5f;
         [SerializeField] private float _autoCloseDelay = 0.85f;
 
+        [Header("Audio")]
+        [SerializeField] private AudioSource _doorOpenSource;
+
         private Vector3 _closedPos;
         private Quaternion _closedRot;
         private Coroutine _moveCoroutine;
         private Coroutine _snowCoroutine;
         private Coroutine _autoCloseCoroutine;
         private bool _openingForTwist;
+        private int _arrivedFrame = -1;
         private Vector3 _snowWorldPos;
         private Quaternion _snowWorldRot;
         private bool _hasSnowPoint;
@@ -93,6 +97,7 @@ namespace TheLastCup.Presentation
         {
             if (IsMatchingDoor(spirit))
             {
+                _arrivedFrame = Time.frameCount;
                 _openingForTwist = spirit != null && spirit.isTwistGuest;
                 OpenDoor();
             }
@@ -112,6 +117,9 @@ namespace TheLastCup.Presentation
 
         private void OnGuestLeft()
         {
+            if (Time.frameCount == _arrivedFrame)
+                return;
+
             CloseDoor();
         }
 
@@ -198,6 +206,8 @@ namespace TheLastCup.Presentation
 
         private void StartMove(Vector3 targetPos, Quaternion targetRot, System.Action onComplete)
         {
+            AudioHelper.Play(_doorOpenSource);
+
             if (_moveCoroutine != null)
                 StopCoroutine(_moveCoroutine);
 

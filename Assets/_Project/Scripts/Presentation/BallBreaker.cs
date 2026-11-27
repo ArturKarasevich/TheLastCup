@@ -80,6 +80,9 @@ namespace TheLastCup.Presentation
             foreach (var mr in GetComponentsInChildren<MeshRenderer>())
                 mr.enabled = false;
 
+            foreach (var ps in GetComponentsInChildren<ParticleSystem>())
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
             SpawnShards(hitPoint, hitNormal);
         }
 

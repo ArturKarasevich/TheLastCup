@@ -1,4 +1,5 @@
 using TheLastCup.Core;
+using TheLastCup.Data;
 using UnityEngine;
 
 namespace TheLastCup.Presentation
@@ -6,7 +7,7 @@ namespace TheLastCup.Presentation
     [RequireComponent(typeof(Collider))]
     public class TeapotCatcher : MonoBehaviour
     {
-        private bool _caughtThisFall;
+        private HerbInfo _lastCaughtHerb;
 
         private void Awake()
         {
@@ -16,13 +17,16 @@ namespace TheLastCup.Presentation
 
         private void OnTriggerEnter(Collider other)
         {
-            var leaf = other.GetComponent<FallingLeaf>();
+            var leaf = other.GetComponentInParent<FallingLeaf>();
             if (leaf != null && leaf.HerbData != null)
             {
-                if (!_caughtThisFall)
+                leaf.MarkCaught(transform);
+
+                if (_lastCaughtHerb != leaf.HerbData)
                 {
-                    _caughtThisFall = true;
+                    _lastCaughtHerb = leaf.HerbData;
                     GameEvents.RequestAddHerb(leaf.HerbData);
+                    CancelInvoke(nameof(ResetCatch));
                     Invoke(nameof(ResetCatch), 0.6f);
                 }
             }
@@ -30,7 +34,7 @@ namespace TheLastCup.Presentation
 
         private void ResetCatch()
         {
-            _caughtThisFall = false;
+            _lastCaughtHerb = null;
         }
     }
 }

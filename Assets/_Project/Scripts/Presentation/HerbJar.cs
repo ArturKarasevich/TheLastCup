@@ -13,9 +13,13 @@ namespace TheLastCup.Presentation
         [SerializeField] private OutlineEffect _outline;
         [SerializeField] private TMP_Text _herbNameText;
         [SerializeField] private GameObject _herbPinchPrefab;
+        [SerializeField] private float _pinchSize = 1f;
         [SerializeField] private Material _leafMaterial;
-        [SerializeField] private int _leafBurstCount = 7;
         [SerializeField] private LayerMask _blockingLayers = ~0;
+
+        [Header("Audio")]
+        [SerializeField] private AudioSource _jarOpenSource;
+        [SerializeField] private AudioSource _herbPickSource;
 
         private HerbInfo _herbData;
         private GameObject _draggedPinch;
@@ -167,25 +171,27 @@ namespace TheLastCup.Presentation
         private void StartDrag()
         {
             _isDragging = true;
+            AudioHelper.Play(_jarOpenSource);
+            AudioHelper.Play(_herbPickSource);
 
             _dragStartPoint = _teapotTransform ? _teapotTransform.position : transform.position;
 
             if (_herbPinchPrefab)
             {
                 _draggedPinch = Instantiate(_herbPinchPrefab);
+                _draggedPinch.transform.localScale *= _pinchSize;
             }
             else
             {
                 _draggedPinch = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 _draggedPinch.transform.localScale = Vector3.one * 0.04f;
-                Collider col = _draggedPinch.GetComponent<Collider>();
-                if (col != null)
-                    Destroy(col);
 
                 MeshRenderer mr = _draggedPinch.GetComponent<MeshRenderer>();
                 if (_herbData != null && mr != null)
                     SetMaterialColor(mr, _herbData.GetTeaColor());
             }
+
+            SetCollidersEnabled(_draggedPinch, false);
 
             UpdateDrag();
         }
@@ -220,46 +226,43 @@ namespace TheLastCup.Presentation
         private void StopDrag()
         {
             _isDragging = false;
-            Vector3 releasePos = _draggedPinch ? _draggedPinch.transform.position : transform.position;
-
-            SpawnFallingLeaves(releasePos);
-
-            if (_draggedPinch)
-            {
-                Destroy(_draggedPinch);
-                _draggedPinch = null;
-            }
+            AudioHelper.Play(_herbPickSource);
+            DropDraggedPinch();
         }
 
-        private void SpawnFallingLeaves(Vector3 spawnPos)
+        private void DropDraggedPinch()
         {
-            Color leafColor = _herbData != null ? _herbData.GetTeaColor() : new Color(0.3f, 0.5f, 0.2f);
+            if (!_draggedPinch) return;
 
-            for (int i = 0; i < _leafBurstCount; i++)
-            {
-                var leaf = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                leaf.name = "Falling_Leaf";
+            GameObject leaf = _draggedPinch;
+            _draggedPinch = null;
+            leaf.name = "Falling_Leaf";
 
-                float size = Random.Range(0.012f, 0.02f);
-                leaf.transform.localScale = new Vector3(size, size * 0.5f, size);
-                leaf.transform.position = spawnPos + Random.insideUnitSphere * 0.02f;
-                leaf.transform.rotation = Random.rotation;
+            if (leaf.GetComponentInChildren<Collider>(true) == null)
+                leaf.AddComponent<SphereCollider>();
+            SetCollidersEnabled(leaf, true);
 
-                MeshRenderer mr = leaf.GetComponent<MeshRenderer>();
-                if (mr != null)
-                    SetMaterialColor(mr, leafColor);
+            var leafComp = leaf.GetComponent<FallingLeaf>();
+            if (leafComp == null)
+                leafComp = leaf.AddComponent<FallingLeaf>();
+            leafComp.Setup(_herbData);
 
-                var leafComp = leaf.AddComponent<FallingLeaf>();
-                leafComp.Setup(_herbData);
+            var rb = leaf.GetComponent<Rigidbody>();
+            if (rb == null)
+                rb = leaf.AddComponent<Rigidbody>();
+            rb.mass = 0.02f;
+            rb.linearDamping = 0.8f;
+            rb.angularDamping = 2.0f;
+            rb.linearVelocity = new Vector3(0f, -0.2f, 0f);
+        }
 
-                var rb = leaf.AddComponent<Rigidbody>();
-                rb.mass = 0.02f;
-                rb.linearDamping = 0.8f;
-                rb.angularDamping = 2.0f;
-                rb.linearVelocity = new Vector3(Random.Range(-0.04f, 0.04f), -0.2f, Random.Range(-0.04f, 0.04f));
+        private static void SetCollidersEnabled(GameObject target, bool enabled)
+        {
+            if (!target) return;
 
-                Destroy(leaf, 2.0f);
-            }
+            Collider[] cols = target.GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < cols.Length; i++)
+                cols[i].enabled = enabled;
         }
 
         private void SetMaterialColor(MeshRenderer mr, Color color)
@@ -273,9 +276,6 @@ namespace TheLastCup.Presentation
                 else
                 {
                     Shader urpShader = Shader.Find("Universal Render Pipeline/Lit");
-                    if (urpShader == null) urpShader = Shader.Find("Universal Render Pipeline/Simple Lit");
-                    if (urpShader == null) urpShader = Shader.Find("Sprites/Default");
-
                     if (urpShader != null)
                         _cachedLeafMaterial = new Material(urpShader);
                 }

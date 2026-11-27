@@ -15,6 +15,7 @@ namespace TheLastCup.Presentation
         [SerializeField] private AudioClip _ringSound;
 
         private bool _isUnlocked;
+        private bool _usedForCurrentGuest;
         private Coroutine _shakeCoroutine;
         private Vector3 _originPos;
 
@@ -22,12 +23,19 @@ namespace TheLastCup.Presentation
         {
             GameEvents.OnItemUnlocked += OnItemUnlocked;
             GameEvents.OnTeaChecked += OnTeaChecked;
+            GameEvents.OnGuestArrived += OnGuestArrived;
         }
 
         private void OnDisable()
         {
             GameEvents.OnItemUnlocked -= OnItemUnlocked;
             GameEvents.OnTeaChecked -= OnTeaChecked;
+            GameEvents.OnGuestArrived -= OnGuestArrived;
+        }
+
+        private void OnGuestArrived(GuestInfo _)
+        {
+            _usedForCurrentGuest = false;
         }
 
         private void Awake()
@@ -74,6 +82,21 @@ namespace TheLastCup.Presentation
         public void OnClick()
         {
             if (!_isUnlocked) return;
+
+            if (_usedForCurrentGuest)
+            {
+                GameEvents.ShowSubtitle("Камертон уже использован для этого гостя.");
+                return;
+            }
+
+            Teapot teapot = FindFirstObjectByType<Teapot>();
+            if (teapot == null || teapot.State != TeapotState.ReadyToServe)
+            {
+                GameEvents.ShowSubtitle("Чайник ещё не готов для проверки камертоном.");
+                return;
+            }
+
+            _usedForCurrentGuest = true;
             PlayRing();
             GameEvents.RequestTuningFork();
         }

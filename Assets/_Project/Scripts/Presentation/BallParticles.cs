@@ -6,6 +6,8 @@ namespace TheLastCup.Presentation
 {
     public class BallParticles : MonoBehaviour
     {
+        private const float MinBallRadius = 0.00005f;
+
         [SerializeField] private int _maxParticles = 4000;
         [SerializeField] private int _idleParticlesCount = 1000;
         [SerializeField] private float _cloudRadius = 1.05f;
@@ -32,7 +34,7 @@ namespace TheLastCup.Presentation
             if (particleMaterial != null)
                 _particleMaterial = particleMaterial;
 
-            _ballRadius = Mathf.Max(0.005f, (radius - offset) * 0.90f);
+            _ballRadius = Mathf.Max(MinBallRadius, (radius - offset) * 0.90f);
 
             GameObject psGo = new GameObject("BallInnerParticles");
             psGo.transform.SetParent(transform, false);
@@ -58,8 +60,12 @@ namespace TheLastCup.Presentation
             shape.enabled = false;
 
             ParticleSystemRenderer psRenderer = psGo.GetComponent<ParticleSystemRenderer>();
-            if (psRenderer != null && _particleMaterial != null)
-                psRenderer.sharedMaterial = _particleMaterial;
+            if (psRenderer != null)
+            {
+                psRenderer.sortingOrder = 10;
+                if (_particleMaterial != null)
+                    psRenderer.sharedMaterial = _particleMaterial;
+            }
 
             _particlesArray = new ParticleSystem.Particle[_maxParticles];
             _particleStartPositions = new Vector3[_maxParticles];
@@ -67,9 +73,7 @@ namespace TheLastCup.Presentation
 
             for (int i = 0; i < _maxParticles; i++)
             {
-                Vector3 dir = Random.onUnitSphere;
-                float dist = Random.Range(0.15f, 1f);
-                _particleStartPositions[i] = dir * (_ballRadius * _cloudRadius * dist);
+                _particleStartPositions[i] = Random.insideUnitSphere;
                 _particleOffsets[i] = new Vector3(Random.Range(0f, 100f), Random.Range(0f, 100f), Random.Range(0f, 100f));
                 _particlesArray[i].remainingLifetime = 99999f;
                 _particlesArray[i].startLifetime = 99999f;
@@ -113,6 +117,7 @@ namespace TheLastCup.Presentation
 
             float gather = Mathf.SmoothStep(0f, 1f, _gatherProgress);
             float baseSize = _ballRadius * _idleParticleSize;
+            float maxRadius = _ballRadius * _cloudRadius;
 
             for (int i = 0; i < countToDraw; i++)
             {
@@ -121,19 +126,21 @@ namespace TheLastCup.Presentation
                     Mathf.Sin(time + offset.x) * 0.08f,
                     Mathf.Cos(time * 0.8f + offset.y) * 0.08f,
                     Mathf.Sin(time * 1.1f + offset.z) * 0.08f
-                ) * _ballRadius;
+                ) * maxRadius;
 
-                Vector3 idlePos = _particleStartPositions[i] + drift;
+                Vector3 idlePos = _particleStartPositions[i] * maxRadius + drift;
+                if (idlePos.sqrMagnitude > maxRadius * maxRadius)
+                    idlePos = idlePos.normalized * maxRadius;
                 Vector3 finalPos = idlePos;
                 float size = baseSize;
-                Color color = new Color(_wordColor.r, _wordColor.g, _wordColor.b, 0.35f);
+                Color color = new Color(_wordColor.r, _wordColor.g, _wordColor.b, 0.9f);
 
                 if (i < _letterTargets.Count && _gatherProgress > 0.001f)
                 {
                     Vector3 targetPos = _letterTargets[i];
                     finalPos = Vector3.Lerp(idlePos, targetPos, gather);
 
-                    float targetAlpha = Mathf.Lerp(0.35f, 0.9f, gather) * (1f - _textRevealProgress * 0.85f);
+                    float targetAlpha = Mathf.Lerp(0.9f, 1.0f, gather) * (1f - _textRevealProgress * 0.85f);
                     color = new Color(_wordColor.r, _wordColor.g, _wordColor.b, targetAlpha);
                     size = Mathf.Lerp(baseSize, _ballRadius * _letterParticleSize, gather);
                 }

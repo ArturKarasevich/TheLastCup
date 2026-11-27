@@ -3,8 +3,9 @@ Shader "Custom/URP_RimHighlight"
     Properties
     {
         [HDR] _RimColor ("Rim Color", Color) = (1, 1, 1, 1)
-        _RimPower ("Rim Sharpness", Range(0.5, 10.0)) = 3.5
-        _RimIntensity ("Rim Intensity", Range(0.1, 5.0)) = 1.5
+        [HDR] _OutlineColor ("Outline Color", Color) = (1, 1, 1, 1)
+        _RimPower ("Rim Sharpness", Range(0.5, 10.0)) = 2.8
+        _RimIntensity ("Rim Intensity", Range(0.1, 5.0)) = 1.6
     }
 
     SubShader
@@ -44,6 +45,7 @@ Shader "Custom/URP_RimHighlight"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _RimColor;
+                float4 _OutlineColor;
                 float _RimPower;
                 float _RimIntensity;
             CBUFFER_END
@@ -71,7 +73,7 @@ Shader "Custom/URP_RimHighlight"
                 float rim = 1.0 - NdotV;
                 rim = pow(rim, _RimPower) * _RimIntensity;
 
-                return _RimColor * rim;
+                return _RimColor * _OutlineColor * _OutlineColor.a * rim;
             }
             ENDHLSL
         }

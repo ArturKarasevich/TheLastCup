@@ -11,6 +11,8 @@ namespace TheLastCup.Presentation
         [SerializeField] private Vector3 _spawnScale = new Vector3(10f, 10f, 10f);
         [SerializeField] private float _respawnDelay = 0.5f;
 
+        private Coroutine _respawnCoroutine;
+
         private void OnEnable()
         {
             GameEvents.OnTeapotBroken += OnTeapotBroken;
@@ -30,17 +32,27 @@ namespace TheLastCup.Presentation
 
         private void OnTeapotBroken()
         {
-            StartCoroutine(RespawnRoutine());
+            if (_respawnCoroutine != null)
+                StopCoroutine(_respawnCoroutine);
+
+            _respawnCoroutine = StartCoroutine(RespawnRoutine());
         }
 
         private IEnumerator RespawnRoutine()
         {
             yield return new WaitForSeconds(_respawnDelay);
+            _respawnCoroutine = null;
             SpawnTeapot();
         }
 
         private void SpawnTeapot()
         {
+            if (_respawnCoroutine != null)
+            {
+                StopCoroutine(_respawnCoroutine);
+                _respawnCoroutine = null;
+            }
+
             if (!_teapotPrefab || !_spawnPoint) return;
 
             var teapot = Instantiate(_teapotPrefab, _spawnPoint.position, _spawnPoint.rotation);

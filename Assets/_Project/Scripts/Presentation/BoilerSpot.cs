@@ -21,6 +21,7 @@ namespace TheLastCup.Presentation
             GameEvents.OnTeaBrewed += OnTeaBrewed;
             GameEvents.OnTeapotBroken += OnReset;
             GameEvents.OnResetTeaCycle += OnReset;
+            GameEvents.OnTeaDumped += OnReset;
         }
 
         private void OnDisable()
@@ -30,6 +31,7 @@ namespace TheLastCup.Presentation
             GameEvents.OnTeaBrewed -= OnTeaBrewed;
             GameEvents.OnTeapotBroken -= OnReset;
             GameEvents.OnResetTeaCycle -= OnReset;
+            GameEvents.OnTeaDumped -= OnReset;
         }
 
         private void Awake()

@@ -275,7 +275,7 @@ namespace TheLastCup.Presentation
                 return;
             }
 
-            if (_pendingGuest != null && (_isSitting || _stayingGuestIds.Contains(_pendingGuest.id)))
+            if (_pendingGuest != null && _stayingGuestIds.Contains(_pendingGuest.id))
             {
                 _stayingGuestIds.Add(_pendingGuest.id);
                 _isSitting = false;

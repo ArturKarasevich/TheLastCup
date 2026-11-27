@@ -434,6 +434,9 @@ namespace TheLastCup.Presentation
 
         public void ReturnAndTurnToTarget(Transform lookTarget)
         {
+            _focusHistory.Clear();
+            _isTurningToTarget = false;
+
             if (!lookTarget)
             {
                 ReturnToFreeLook();
@@ -445,7 +448,7 @@ namespace TheLastCup.Presentation
             if (_moveCoroutine != null)
                 StopCoroutine(_moveCoroutine);
 
-            Vector3 dir = (lookTarget.position - _savedPosition).normalized;
+            Vector3 dir = (lookTarget.position - _startPosition).normalized;
             Quaternion targetWorldRot = Quaternion.LookRotation(dir, Vector3.up);
 
             Quaternion localOffset = Quaternion.Inverse(_startRotation) * targetWorldRot;
@@ -460,7 +463,7 @@ namespace TheLastCup.Presentation
             _pendingYaw = yaw;
             _pendingPitch = pitch;
 
-            _moveCoroutine = StartCoroutine(SmoothMoveRoutine(_savedPosition, clampedRot, OnReturnAndTurnComplete));
+            _moveCoroutine = StartCoroutine(SmoothMoveRoutine(_startPosition, clampedRot, OnReturnAndTurnComplete));
         }
 
         private void OnReturnAndTurnComplete()

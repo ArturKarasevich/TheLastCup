@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Text;
 using TheLastCup.Core;
 using TMPro;
 using UnityEngine;
@@ -148,19 +147,16 @@ namespace TheLastCup.UI
             if (_logText)
             {
                 string mutedHex = ColorUtility.ToHtmlStringRGB(_fadedTextColor);
-                var sb = new StringBuilder();
-                sb.AppendLine("<b>ПУТЕВОЙ ЛИСТ СМЕНЫ</b>");
-                sb.AppendLine();
+                string log = "<b>ПУТЕВОЙ ЛИСТ СМЕНЫ</b>\n\n";
 
                 foreach (var entry in summary.GuestItems)
                 {
                     string scoreText = entry.TeaScore >= 0 ? $"{entry.TeaScore}/3" : "—";
-                    sb.AppendLine($"• <b>{entry.GuestName}</b>  <color=#{mutedHex}>({scoreText})</color>");
-                    sb.AppendLine($"  <color=#{mutedHex}><i>{entry.ResultTitle}</i></color>");
-                    sb.AppendLine();
+                    log += $"• <b>{entry.GuestName}</b>  <color=#{mutedHex}>({scoreText})</color>\n";
+                    log += $"  <color=#{mutedHex}><i>{entry.ResultTitle}</i></color>\n\n";
                 }
 
-                _logText.text = sb.ToString();
+                _logText.text = log;
             }
 
             if (_creditsText && !string.IsNullOrEmpty(_creditsTextData))

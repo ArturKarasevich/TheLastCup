@@ -41,7 +41,7 @@ namespace TheLastCup.Presentation
 
         private void Update()
         {
-            if (!_heldItem || !_camera) return;
+            if (Time.timeScale == 0f || !_heldItem || !_camera) return;
 
             if (Mouse.current != null && Mouse.current.leftButton.isPressed)
             {

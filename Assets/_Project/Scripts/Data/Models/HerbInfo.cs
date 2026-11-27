@@ -17,7 +17,6 @@ namespace TheLastCup.Data
         public string name;
         public string slotType;
         public int slotIndex;
-        public string[] tags;
         public string colorHex;
         public string liquidColorHex;
         public string lookInfo;

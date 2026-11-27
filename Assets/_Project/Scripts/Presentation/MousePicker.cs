@@ -1,5 +1,6 @@
 using TheLastCup.Core;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace TheLastCup.Presentation
@@ -59,8 +60,19 @@ namespace TheLastCup.Presentation
 
         private void Update()
         {
-            if (_isBallOpen)
+            if (Time.timeScale == 0f || _isBallOpen)
+            {
+                SetHoveredObject(null);
+                SetPassiveOutline(null);
                 return;
+            }
+
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                SetHoveredObject(null);
+                SetPassiveOutline(null);
+                return;
+            }
 
             Ray ray = GetMouseRay();
 

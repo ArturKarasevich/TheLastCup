@@ -42,8 +42,12 @@ namespace TheLastCup.Presentation
                 }
             }
 
-            foreach (var list in jarsBySlot.Values)
-                list.Sort(CompareJarsByX);
+            var slotBounds = new Dictionary<TeaSlotType, (Vector3 start, Vector3 end)>();
+            foreach (var kv in jarsBySlot)
+            {
+                kv.Value.Sort(CompareJarsByX);
+                slotBounds[kv.Key] = (kv.Value[0].transform.localPosition, kv.Value[kv.Value.Count - 1].transform.localPosition);
+            }
 
             var modifiedSlots = new HashSet<TeaSlotType>();
             int fallbackIndex = 0;
@@ -88,16 +92,8 @@ namespace TheLastCup.Presentation
                 if (slotJars.Count < 2) continue;
 
                 int count = slotJars.Count;
-                Vector3 startPos = slotJars[0].transform.localPosition;
-                Vector3 endPos = slotJars[count - 1].transform.localPosition;
-                for (int k = count - 1; k >= 1; k--)
-                {
-                    if ((slotJars[k].transform.localPosition - startPos).sqrMagnitude >= 0.000001f)
-                    {
-                        endPos = slotJars[k].transform.localPosition;
-                        break;
-                    }
-                }
+                Vector3 startPos = slotBounds[slot].start;
+                Vector3 endPos = slotBounds[slot].end;
                 if ((endPos - startPos).sqrMagnitude < 0.000001f)
                 {
                     float parentScaleX = 1f;

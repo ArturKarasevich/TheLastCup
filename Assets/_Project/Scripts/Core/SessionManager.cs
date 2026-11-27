@@ -163,6 +163,7 @@ namespace TheLastCup.Core
             if (!_progress.UseWhistle())
                 return false;
 
+            _progress.ResetForNextGuest();
             GameEvents.ResetTeaCycle();
             GameEvents.SetHintPulse(_guestIndex == 0);
             GameEvents.SendGuestArrived(_currentGuest);
@@ -172,7 +173,8 @@ namespace TheLastCup.Core
 
         public void CheckCupWithTuningFork(TeaMaker teaMaker)
         {
-            if (_currentGuest == null || teaMaker == null) return;
+            if (_currentGuest == null || teaMaker == null || !teaMaker.IsCupFull)
+                return;
 
             if (!_progress.UseTuningFork())
             {
@@ -181,7 +183,8 @@ namespace TheLastCup.Core
             }
 
             var preview = teaMaker.CheckTea(_currentGuest);
-            GameEvents.ShowSubtitle($"Камертон звенит: {preview.MatchCount} из 3 нот в гармонии.");
+            int totalSlots = teaMaker.CupSlots != null ? teaMaker.CupSlots.Length : 3;
+            GameEvents.ShowSubtitle($"Камертон звенит: {preview.MatchCount} из {totalSlots} нот в гармонии.");
         }
 
         public bool InspectHerbWithMagnifier(string herbId)
