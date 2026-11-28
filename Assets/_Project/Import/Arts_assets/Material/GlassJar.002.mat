@@ -34,6 +34,6 @@ Material:
     - _FresnelStrength: 0.65
     - _Smoothness: 0.92
     m_Colors:
-    - _BaseColor: {r: 0.9162735, g: 0.9260748, b: 0.8756056, a: 0.32}
+    - _BaseColor: {r: 0.9538751, g: 0.96981126, b: 0.7374225, a: 0.25490198}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

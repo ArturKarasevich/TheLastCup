@@ -85,6 +85,7 @@ namespace TheLastCup.Presentation
             {
                 _sunLight.gameObject.SetActive(true);
                 _sunLight.enabled = true;
+                _sunLight.intensity = 0f;
                 _sunLight.transform.rotation = Quaternion.Euler(_darkSunAngle);
             }
 
@@ -203,7 +204,9 @@ namespace TheLastCup.Presentation
         private IEnumerator FadeEndingLightingRoutine(EndingRank tier)
         {
             bool enableSun = tier == EndingRank.GoldenDawn || tier == EndingRank.PaleDawn;
-            float targetSunIntensity = tier == EndingRank.GoldenDawn ? _goldSunPower : _paleSunPower;
+            float targetSunIntensity = enableSun
+                ? (tier == EndingRank.GoldenDawn ? _goldSunPower : _paleSunPower)
+                : 0f;
             Color targetSunColor = tier == EndingRank.GoldenDawn ? _goldSunColor : _paleSunColor;
 
             Quaternion startSunRot = _sunLight ? _sunLight.transform.rotation : Quaternion.identity;
