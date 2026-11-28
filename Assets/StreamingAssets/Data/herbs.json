@@ -1,16 +1,6 @@
 {
   "herbs": [
     {
-      "id": "juniper",
-      "name": "Можжевельник",
-      "slotType": "Base",
-      "slotIndex": 0,
-      "colorHex": "#3E6B48",
-      "liquidColorHex": "#52825B",
-      "secretAuthor": "Заметка мастера",
-      "secretNote": "Таёжный дымок: можжевельник добавлен исключительно через внешний JSON без единой строчки нового C#-кода."
-    },
-    {
       "id": "ivan_tea",
       "name": "Иван-чай",
       "slotType": "Base",
