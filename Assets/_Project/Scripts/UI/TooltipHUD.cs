@@ -39,6 +39,8 @@ namespace TheLastCup.UI
         private float _targetAlpha;
         private string _lastHint;
         private bool _isFirstGuest = true;
+        private bool _watchHintShown;
+        private bool _watchHintDismissed;
         private float _cardTargetAlpha;
         private string _lastCardKey;
         private Camera _camera;
@@ -272,11 +274,32 @@ namespace TheLastCup.UI
             }
         }
 
+        private const string WatchHintText = "Если захочешь взять перерыв — взгляни на карманные часы";
+
         private string GetCurrentHint()
         {
             if (!_isFirstGuest)
                 return null;
 
+            string otherHint = GetOtherHint();
+            if (!string.IsNullOrEmpty(otherHint))
+            {
+                if (_watchHintShown)
+                    _watchHintDismissed = true;
+                return otherHint;
+            }
+
+            if (!_watchHintDismissed && _watch && !_watch.WasOpened && _watchOutline && _watchOutline.IsPulsing)
+            {
+                _watchHintShown = true;
+                return WatchHintText;
+            }
+
+            return null;
+        }
+
+        private string GetOtherHint()
+        {
             if (_ball && _ball.IsOpen)
                 return "Встряхни шар, чтобы акцентировать мысли гостя";
 
@@ -285,9 +308,6 @@ namespace TheLastCup.UI
 
             if (_ballOutline && _ballOutline.IsPulsing)
                 return "Посмотри на стеклянный шар — он акцентирует важные слова гостя";
-
-            if (_watch && !_watch.WasOpened && _watchOutline && _watchOutline.IsPulsing)
-                return "Если захочешь взять перерыв — взгляни на карманные часы";
 
             if (_guestTableOutline && _guestTableOutline.IsPulsing)
                 return "Посмотри на столик гостя и выслушай путника";
